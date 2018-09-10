@@ -1,0 +1,23 @@
+<!--index.wxml-->
+<view>
+    <view class="{{isX?'header-container phX-header-container':'header-container'}}">
+        <!--phX-search-view-->
+        <view wx:if="{{!isX}}" class="{{isAndrod?'search-view andr-top':'search-view'}}" bindtap="goSearch">
+            <image src="../../images/search_icon.png" class="search-icon"></image>
+            <view>搜索关键词</view>
+        </view>
+        <view wx:if="{{isX}}" class="search-view phX-search-view" bindtap="goSearch">
+            <image src="../../images/search_icon.png" class="search-icon"></image>
+            <view>搜索关键词</view>
+        </view>
+    </view>
+    <view class="tab-head">
+        <view class="{{type*1===1?'tab-item tab-item-active':'tab-item'}}">精选壁纸</view>
+        <view class="{{type*1===2?'tab-item tab-item-active':'tab-item'}}">影视剧照</view>
+    </view>
+    <view class="tab-main-container">
+        <view class="list-item">12</view>
+        <view class="list-item">12333</view>
+    </view>
+</view>
+<!--<image src="../../images/getprize_icon.png" class="reward-icon" bindtap="goReward"></image>-->
