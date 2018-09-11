@@ -11,13 +11,25 @@
             <view>搜索关键词</view>
         </view>
     </view>
-    <view class="tab-head">
-        <view class="{{type*1===1?'tab-item tab-item-active':'tab-item'}}">精选壁纸</view>
-        <view class="{{type*1===2?'tab-item tab-item-active':'tab-item'}}">影视剧照</view>
+    <view class="{{isX?'tab-head phX-tab-head':'tab-head'}}">
+        <view class="{{type*1===1?'tab-item tab-item-active':'tab-item'}}" data-type="1" bindtap="changeTab">精选壁纸</view>
+        <view class="{{type*1===2?'tab-item tab-item-active':'tab-item'}}" data-type="2" bindtap="changeTab">影视剧照</view>
     </view>
-    <view class="tab-main-container">
-        <view class="list-item">12</view>
-        <view class="list-item">12333</view>
+    <view wx:if="{{mlist.length>0}}" class="{{isX?'tab-main-container phX-tab-main-container':'tab-main-container'}}">
+        <view class="tab-main-content">
+            <view class="list-item" wx:for="{{mlist}}" wx:key="key" data-id="{{item.movies_id}}" bindtap="gotoDetail">
+                <view class="img-container">
+                    <image lazy-load="{{true}}" src="{{item.cover}}"></image>
+                </view>
+                <view class="img-infos-cont">
+                    <view class="img-name">{{item.movies_name}}</view>
+                    <view class="img-infos">
+                        <view>{{item.created_time}}</view>
+                        <view class="img-num">{{item.wallpaper_count || 0}}张</view>
+                    </view>
+                </view>
+            </view>
+        </view>
     </view>
 </view>
 <!--<image src="../../images/getprize_icon.png" class="reward-icon" bindtap="goReward"></image>-->

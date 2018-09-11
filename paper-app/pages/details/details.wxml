@@ -2,18 +2,32 @@
 <view>
     <view class="{{isX?'header phX-header':'header'}}">
         <view class="header-icons">
-            <image src="../../images/yellow_back.png" class="back-icon" bindtap="goBack"></image>
+            <image src="../../images/back_icon.png" class="back-icon" bindtap="goBack"></image>
             <image src="../../images/home_icon.png" class="home-icon" bindtap="goHome"></image>
         </view>
     </view>
-    <swiper duration="{{300}}" class="d-content" style="height: {{winHeight-65}}px;" wx:if="{{imgList}}">
+
+    <!--<swiper duration="{{300}}" class="d-content" style="height: {{winHeight-65}}px;" wx:if="{{imgList}}">-->
+        <!--<block wx:for="{{imgList}}" wx:key="index">-->
+            <!--<swiper-item class="swiper-item" data-img="{{item.img_url}}" bindtap="previewImg">-->
+                <!--<image src="{{item.img_url || '../../images/default_img.png'}}" class="img-item" mode="widthFix" />-->
+                <!--<view class="cont-botom">-->
+                    <!--<view class="d-title"># {{item.category_name}}</view>-->
+                    <!--<view class="tag-view">-->
+                        <!--<view class="d-tag" wx:for="{{item.tag}}" wx:key="index" data-tname="{{item.tag_name}}" catchtap="gotoSearch">{{item.tag_name}}</view>-->
+                    <!--</view>-->
+                <!--</view>-->
+            <!--</swiper-item>-->
+        <!--</block>-->
+    <!--</swiper>-->
+    <swiper duration="{{300}}" class="{{isX?'d-content phX-d-content':'d-content'}}" style="min-height: 1206rpx;overflow-y: auto" wx:if="{{imgList}}">
         <block wx:for="{{imgList}}" wx:key="index">
-            <swiper-item class="swiper-item" data-img="{{item.img_url}}" bindtap="previewImg">
-                <image src="{{item.img_url || '../../images/default_img.png'}}" class="img-item" mode="widthFix" />
+            <swiper-item class="swiper-item" data-img="{{item.original_url}}" bindtap="previewImg">
+                <image lazy-load="{{true}}" src="{{item.original_url}}" class="img-item" mode="widthFix"></image>
                 <view class="cont-botom">
-                    <view class="d-title"># {{item.category_name}}</view>
-                    <view class="tag-view">
-                        <view class="d-tag" wx:for="{{item.tag}}" wx:key="index" data-tname="{{item.tag_name}}" catchtap="gotoSearch">{{item.tag_name}}</view>
+                    <view class="img-infos">
+                        <view class="img-title">{{movies_name}}</view>
+                        <view class="img-num"><text>{{index+1}}</text>/<text>{{wallpaper_count}}</text></view>
                     </view>
                 </view>
             </swiper-item>
@@ -21,12 +35,13 @@
     </swiper>
 
     <!--<view class="d-content" style="height: {{winHeight-65}}px;">-->
-        <!--<imgae src="" class="img-item" mode="aspectFit"></imgae>-->
+        <!--<view class="img-container">-->
+            <!--<imgae src="" class="img-item" mode="aspectFit"></imgae>-->
+        <!--</view>-->
         <!--<view class="cont-botom">-->
-            <!--<view class="d-title"># 热点TOP</view>-->
-            <!--<view class="tag-view">-->
-                <!--<view class="d-tag">汪星人</view>-->
-                <!--<view class="d-tag">biubiubiu</view>-->
+            <!--<view class="img-infos">-->
+                <!--<view class="img-title">《复仇者联盟3：无限战争》</view>-->
+                <!--<view class="img-num">1/30</view>-->
             <!--</view>-->
         <!--</view>-->
     <!--</view>-->
