@@ -40,8 +40,8 @@ page{position: relative;}
 .reward-icon{
     position: fixed;width: 92rpx;height: 92rpx;right: 30rpx;bottom: 30rpx;
 }
-.header-container{height: 128rpx;background: #fff;position: fixed;left: 0;top: 0;width: 100%;padding-top: 38rpx;}
-.phX-header-container{height: 168rpx}
+.header-container{height: 128rpx;background: #fff;position: fixed;left: 0;top: 40rpx;width: 100%;padding-top: 38rpx;}
+.phX-header-container{height: 168rpx;top: 60rpx;}
 .tab-head{
   height: 92rpx;background: #fff;width: 100%;position: fixed;left: 0;top: 128rpx;
 }
@@ -79,3 +79,7 @@ page{position: relative;}
   font-size: 24rpx;color: #888;display: flex;justify-content: space-between;
 }
 .img-num{color: #E7A235}
+.phone-top{
+  position: fixed;width: 100%;top:0;left: 0;background: #fff;height: 40rpx;
+}
+.phX-phone-top{height: 60rpx;}

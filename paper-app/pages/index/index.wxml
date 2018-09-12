@@ -1,5 +1,6 @@
 <!--index.wxml-->
 <view>
+    <view class="{{isX?'phone-top phX-phone-top':'phone-top'}}"></view>
     <view class="{{isX?'header-container phX-header-container':'header-container'}}">
         <!--phX-search-view-->
         <view wx:if="{{!isX}}" class="{{isAndrod?'search-view andr-top':'search-view'}}" bindtap="goSearch">

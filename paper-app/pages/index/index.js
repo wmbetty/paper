@@ -25,7 +25,7 @@ Page({
         if (model.indexOf('iPhone') == -1) {
           that.setData({isAndrod: true})
         }
-        if (model==='iPhone X') {
+        if (model.indexOf('iPhone X') != -1) {
           that.setData({isX: true})
         }
       }
@@ -157,7 +157,8 @@ Page({
   gotoDetail (e) {
     let id = e.currentTarget.dataset.id;
     wx.navigateTo({
-      url: `/pages/details/details?id=${id}`
+      // url: `/pages/details/details?id=${id}`
+      url: `/pages/detail/detail?id=${id}`
     })
   },
   goSearch () {

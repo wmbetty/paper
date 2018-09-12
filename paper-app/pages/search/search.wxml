@@ -1,5 +1,6 @@
 <!--pages/search/search.wxml-->
 <view>
+    <view class="phone-top"></view>
     <view class="{{isX?'header phX-header':'header'}}">
         <view class="header-icons">
             <image src="../../images/back_icon.png" class="back-icon" bindtap="goBack"></image>

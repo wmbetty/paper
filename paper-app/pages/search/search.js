@@ -210,7 +210,8 @@ Page({
   gotoDetail (e) {
     let id = e.currentTarget.dataset.id;
     wx.navigateTo({
-      url: `/pages/details/details?id=${id}`
+      // url: `/pages/details/details?id=${id}`
+      url: `/pages/detail/detail?id=${id}`
     })
   },
   goBack () {
