@@ -1,5 +1,7 @@
 const backApi = require('../../utils/util');
 const Api = require('../../utils/wxApi');
+const app = getApp();
+const statusBarHeight = app.globalData.height;
 
 Page({
   data: {
@@ -10,11 +12,18 @@ Page({
     movId: '',
     token: '',
     movies_name: '',
-    wallpaper_count: ''
+    wallpaper_count: '',
+    nvabarData: {
+      showCapsule: 1, //是否显示左上角图标
+      showTitle: false,
+      showHome: true
+    },
+    statusBarHeight: 0
   },
   onLoad: function (options) {
     let that = this;
     let id = options.id;
+    that.setData({movId: id, statusBarHeight: statusBarHeight});
     //  高度自适应
     wx.getSystemInfo({
       success: function( res ) {
@@ -45,6 +54,7 @@ Page({
           if (res.data.status*1===200) {
             wx.hideLoading();
             that.setData({movies_name: res.data.data.movies_name,wallpaper_count: res.data.data.wallpaper_count});
+            console.log(res.data.data, 'aaaa')
             if (res.data.data.wallpaper.length===0) {
               Api.wxShowToast('暂无数据~', 'none', 2000);
             } else {

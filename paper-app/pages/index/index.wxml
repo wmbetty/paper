@@ -1,36 +1,273 @@
-<!--index.wxml-->
-<view>
-    <view class="{{isX?'phone-top phX-phone-top':'phone-top'}}"></view>
-    <view class="{{isX?'header-container phX-header-container':'header-container'}}">
-        <!--phX-search-view-->
-        <view wx:if="{{!isX}}" class="{{isAndrod?'search-view andr-top':'search-view'}}" bindtap="goSearch">
-            <image src="../../images/search_icon.png" class="search-icon"></image>
-            <view>搜索关键词</view>
-        </view>
-        <view wx:if="{{isX}}" class="search-view phX-search-view" bindtap="goSearch">
-            <image src="../../images/search_icon.png" class="search-icon"></image>
-            <view>搜索关键词</view>
-        </view>
+<!--pages/test/test.wxml-->
+<nav-bar navbar-data='{{nvabarData}}'></nav-bar>
+<!-- <view wx:if="{{isPullDown}}" class="page-cover" catchtouchmove='ture'></view> -->
+<view hidden="{{distanceY <= 60}}" bindtouchstart="touchstart" bindtouchend="touchend" catchtouchmove='true'>
+  <view wx:if="{{isPullDown}}" style="margin-top:{{statusBarHeight>30?(statusBarHeight*2 + 12):(statusBarHeight*2 + 40)}}px">
+    <view class="loading-text">
+      <view>加载中</view>
+      <view class="dotting"></view>
     </view>
-    <view class="{{isX?'tab-head phX-tab-head':'tab-head'}}">
-        <view class="{{type*1===1?'tab-item tab-item-active':'tab-item'}}" data-type="1" bindtap="changeTab">精选壁纸</view>
-        <view class="{{type*1===2?'tab-item tab-item-active':'tab-item'}}" data-type="2" bindtap="changeTab">影视剧照</view>
+  </view>
+  <view wx:if="{{!isPullDown}}" class="recommend" style="margin-top:{{statusBarHeight>30?(statusBarHeight*2 + 12):(statusBarHeight*2 + 40)}}px">
+    <view class="swiper-container">
+      <swiper autoplay="auto" interval="3500" duration="800" indicator-dots="{{indicatorDots}}" indicator-color="{{indicatorColor}}" indicator-active-color="{{dotActiveColor}}" class="swiper">
+        <block wx:for="{{banners}}" wx:key="unique">
+          <swiper-item>
+            <image src="{{item.img_url}}" data-url="{{item.link_url}}" class="img" data-index="{{index}}" bindtap="bannerGo"></image>
+          </swiper-item>
+        </block>
+      </swiper>
+      <!-- <view class="dots">
+        <block wx:for="{{banners}}" wx:key="unique">
+          <view class="dot{{index == swiperCurrent ? ' active' : ''}}" catchtap="chuangEvent" id="{{index}}"></view>
+        </block>
+      </view> -->
     </view>
-    <view wx:if="{{mlist.length>0}}" class="{{isX?'tab-main-container phX-tab-main-container':'tab-main-container'}}">
-        <view class="tab-main-content">
-            <view class="list-item" wx:for="{{mlist}}" wx:key="key" data-id="{{item.movies_id}}" bindtap="gotoDetail">
-                <view class="img-container">
-                    <image lazy-load="{{true}}" src="{{item.cover}}"></image>
-                </view>
-                <view class="img-infos-cont">
-                    <view class="img-name">{{item.movies_name}}</view>
-                    <view class="img-infos">
-                        <view>{{item.created_time}}</view>
-                        <view class="img-num">{{item.wallpaper_count || 0}}张</view>
-                    </view>
-                </view>
-            </view>
+  </view>
+  <view wx:if="{{isPullDown}}" class="recommend" style="margin-top:20px;">
+    <view class="swiper-container">
+      <swiper autoplay="auto" interval="3500" duration="800" circular="{{true}}" class="swiper" indicator-dots="{{indicatorDots}}" indicator-color="{{indicatorColor}}" indicator-active-color="{{dotActiveColor}}">
+        <block wx:for="{{banners}}" wx:key="unique">
+          <swiper-item>
+            <image src="{{item.img_url}}" data-url="{{item.link_url}}" class="img" data-index="{{index}}" bindtap="bannerGo"></image>
+          </swiper-item>
+        </block>
+      </swiper>
+      <!-- <view class="dots">
+        <block wx:for="{{banners}}" wx:key="unique">
+          <view class="dot{{index == swiperCurrent ? ' active' : ''}}" catchtap="chuangEvent" id="{{index}}"></view>
+        </block>
+      </view> -->
+    </view>
+  </view>
+  <view class="flex-box app-list-cont">
+    <view wx:for="{{appList}}" wx:key="index" data-item="{{item}}" bindtap="gotoApp">
+      <image src="{{item.logo}}" class="app-icon"></image>
+      <view class="app-name">{{item.name}}</view>
+    </view>
+    <view bindtap="gotoMore">
+      <image src="../../images/more_icon.png" class="app-icon"></image>
+      <view>更多好玩</view>
+    </view>
+  </view>
+
+  <view class="img-list-container">
+    <view class="list-head flex-box" data-tid="{{recommendObj.id}}" data-index="0" bindtap='gotoMorePaper'>
+      <view class="flex-box align-center">
+        <view class="red-line"></view>
+        <view class="head-title">{{recommendObj.name}}</view>
+      </view>
+      <view class="flex-box align-center">
+        <view class="more-text">查看更多</view>
+        <image src="../../images/inmore_icon.png" class="more-icon"></image>
+      </view>
+    </view>
+    <view class="flex-box list-group">
+      <view class="list-item" wx:for="{{recommends}}" wx:key="index" data-item="{{item}}" data-index="0" bindtap="gotoDetails">
+        <image src="{{item.cover}}" lazy-load="{{true}}" class="list-img" mode="aspectFill"></image>
+        <view class="img-text">{{item.movies_name}}</view>
+        <image wx:if="{{item.icon_url !== ''}}" class="limit-img-icon" src="{{item.icon_url}}"></image>
+      </view>
+    </view>
+  </view>
+
+  <view class="img-list-container">
+    <view class="list-head flex-box" data-tid="{{hotObj.id}}" data-index="1" bindtap='gotoMorePaper'>
+      <view class="flex-box align-center">
+        <view class="red-line"></view>
+        <view class="head-title">{{hotObj.name}}</view>
+      </view>
+      <view class="flex-box align-center">
+        <view class="more-text">查看更多</view>
+        <image src="../../images/inmore_icon.png" class="more-icon"></image>
+      </view>
+    </view>
+    <view class="flex-box list-group">
+      <view class="list-item" wx:for="{{hots}}" wx:key="index" data-item="{{item}}" data-index="1" bindtap="gotoDetails">
+        <image src="{{item.cover}}" lazy-load="{{true}}" class="list-img" mode="aspectFill"></image>
+        <view class="img-text">{{item.movies_name}}</view>
+        <image wx:if="{{item.icon_url !== ''}}" class="limit-img-icon" src="{{item.icon_url}}"></image>
+      </view>
+    </view>
+  </view>
+
+  <view class="other-img-list-container">
+    <view class="list-head flex-box" data-tid="{{otherObj.id}}" data-index="2" bindtap='gotoMorePaper'>
+      <view class="flex-box align-center">
+        <view class="red-line"></view>
+        <view class="head-title">{{otherObj.name}}</view>
+      </view>
+      <view class="flex-box align-center">
+        <view class="more-text">查看更多</view>
+        <image src="../../images/inmore_icon.png" class="more-icon"></image>
+      </view>
+    </view>
+    <view class="other-list-group">
+      <view class="flex-box first-line">
+        <view class="other-list-img" wx:for="{{others}}" wx:key="index" data-item="{{item}}" data-index="2" wx:if="{{index<3}}" bindtap="gotoDetails">
+          <image src="{{item.cover}}" mode="aspectFill"></image>
+          <!-- <image wx:if="{{item.icon_url !== ''}}" class="limit-img-icon" src="{{item.icon_url}}"></image> -->
         </view>
+      </view>
+      <view class="flex-box second-line">
+        <view class="other-list-img" wx:for="{{others}}" wx:key="index" data-item="{{item}}" data-index="2" wx:if="{{index>2 && index<6}}" bindtap="gotoDetails">
+          <image src="{{item.cover}}" mode="aspectFill"></image>
+          <!-- <image wx:if="{{item.icon_url !== ''}}" class="limit-img-icon" src="{{item.icon_url}}"></image> -->
+        </view>
+      </view>
+      <view class="flex-box third-line">
+        <view class="other-list-img" wx:for="{{others}}" wx:key="index" data-item="{{item}}" data-index="2" wx:if="{{index>5}}" bindtap="gotoDetails">
+          <image src="{{item.cover}}" mode="aspectFill"></image>
+          <!-- <image wx:if="{{item.icon_url !== ''}}" class="limit-img-icon" src="{{item.icon_url}}"></image> -->
+        </view>
+      </view>
     </view>
+  </view>
+
+  <view class="img-list-container">
+      <view class="list-head flex-box" data-tid="{{dramaObj.id}}" data-index="3" bindtap='gotoMorePaper'>
+        <view class="flex-box align-center">
+          <view class="red-line"></view>
+          <view class="head-title">{{dramaObj.name}}</view>
+        </view>
+        <view class="flex-box align-center">
+          <view class="more-text">查看更多</view>
+          <image src="../../images/inmore_icon.png" class="more-icon"></image>
+        </view>
+      </view>
+      <view class="flex-box list-group">
+        <view class="list-item" wx:for="{{drama}}" wx:key="index" data-item="{{item}}" data-index="3" bindtap="gotoDetails">
+          <image src="{{item.cover}}" lazy-load="{{true}}" class="list-img" mode="aspectFill"></image>
+          <view class="img-text">{{item.movies_name}}</view>
+          <image wx:if="{{item.icon_url !== ''}}" class="limit-img-icon" src="{{item.icon_url}}"></image>
+        </view>
+      </view>
+    </view>
+
 </view>
-<!--<image src="../../images/getprize_icon.png" class="reward-icon" bindtap="goReward"></image>-->
+
+<view hidden="{{distanceY > 60}}" bindtouchstart="touchstart" bindtouchend="touchend">
+  <!-- <view wx:if="{{isPullDown}}" class="loading-text" style="margin-top:{{statusBarHeight>30?(statusBarHeight*2 + 12):(statusBarHeight*2 + 40)}}px">加载中...</view> -->
+  <view class="recommend" style="margin-top:{{statusBarHeight>30?(statusBarHeight*2 + 12):(statusBarHeight*2 + 40)}}px">
+    <view class="swiper-container">
+      <swiper autoplay="auto" interval="3500" duration="800" circular="{{true}}" indicator-dots="{{indicatorDots}}" indicator-color="{{indicatorColor}}" indicator-active-color="{{dotActiveColor}}" class="swiper">
+        <block wx:for="{{banners}}" wx:key="unique">
+          <swiper-item>
+            <image src="{{item.img_url}}" data-url="{{item.link_url}}" class="img" data-index="{{index}}" bindtap="bannerGo"></image>
+          </swiper-item>
+        </block>
+      </swiper>
+      <!-- <view class="dots">
+        <block wx:for="{{banners}}" wx:key="unique">
+          <view class="dot{{index == swiperCurrent ? ' active' : ''}}" catchtap="chuangEvent" id="{{index}}"></view>
+        </block>
+      </view> -->
+    </view>
+  </view>
+  <view class="flex-box app-list-cont">
+    <view wx:for="{{appList}}" wx:key="index" data-item="{{item}}" bindtap="gotoApp">
+      <image src="{{item.logo}}" class="app-icon"></image>
+      <view class="app-name">{{item.name}}</view>
+    </view>
+    <view bindtap="gotoMore">
+      <image src="../../images/more_icon.png" class="app-icon"></image>
+      <view>更多好玩</view>
+    </view>
+  </view>
+
+  <view class="img-list-container">
+    <view class="list-head flex-box" data-tid="{{recommendObj.id}}" data-index="0" bindtap='gotoMorePaper'>
+      <view class="flex-box align-center">
+        <view class="red-line"></view>
+        <view class="head-title">{{recommendObj.name}}</view>
+      </view>
+      <view class="flex-box align-center">
+        <view class="more-text">查看更多</view>
+        <image src="../../images/inmore_icon.png" class="more-icon"></image>
+      </view>
+    </view>
+    <view class="flex-box list-group">
+      <view class="list-item" wx:for="{{recommends}}" wx:key="index" data-item="{{item}}" data-index="0" bindtap="gotoDetails">
+        <image src="{{item.cover}}" lazy-load="{{true}}" class="list-img" mode="aspectFill"></image>
+        <view class="img-text">{{item.movies_name}}</view>
+        <image wx:if="{{item.icon_url !== ''}}" class="limit-img-icon" src="{{item.icon_url}}"></image>
+      </view>
+    </view>
+  </view>
+
+  <view class="img-list-container">
+    <view class="list-head flex-box" data-tid="{{hotObj.id}}" data-index="1" bindtap='gotoMorePaper'>
+      <view class="flex-box align-center">
+        <view class="red-line"></view>
+        <view class="head-title">{{hotObj.name}}</view>
+      </view>
+      <view class="flex-box align-center">
+        <view class="more-text">查看更多</view>
+        <image src="../../images/inmore_icon.png" class="more-icon"></image>
+      </view>
+    </view>
+    <view class="flex-box list-group">
+      <view class="list-item" wx:for="{{hots}}" wx:key="index" data-item="{{item}}" data-index="1" bindtap="gotoDetails">
+        <image src="{{item.cover}}" lazy-load="{{true}}" class="list-img" mode="aspectFill"></image>
+        <view class="img-text">{{item.movies_name}}</view>
+        <image wx:if="{{item.icon_url !== ''}}" class="limit-img-icon" src="{{item.icon_url}}"></image>
+      </view>
+    </view>
+  </view>
+
+  <view class="other-img-list-container">
+    <view class="list-head flex-box" data-tid="{{otherObj.id}}" data-index="2" bindtap='gotoMorePaper'>
+      <view class="flex-box align-center">
+        <view class="red-line"></view>
+        <view class="head-title">{{otherObj.name}}</view>
+      </view>
+      <view class="flex-box align-center">
+        <view class="more-text">查看更多</view>
+        <image src="../../images/inmore_icon.png" class="more-icon"></image>
+      </view>
+    </view>
+    <view class="other-list-group">
+      <view class="flex-box first-line">
+        <view class="other-list-img" wx:for="{{others}}" wx:key="index" data-item="{{item}}" data-index="2" wx:if="{{index<3}}" bindtap="gotoDetails">
+          <image src="{{item.cover}}" mode="aspectFill"></image>
+          <image wx:if="{{item.icon_url !== ''}}" class="limit-img-icon" src="{{item.icon_url}}"></image>
+        </view>
+      </view>
+      <view class="flex-box second-line">
+        <view class="other-list-img" wx:for="{{others}}" wx:key="index" data-item="{{item}}" data-index="2" data-index="2" wx:if="{{index>2 && index<6}}" bindtap="gotoDetails">
+          <image src="{{item.cover}}" mode="aspectFill"></image>
+          <image wx:if="{{item.icon_url !== ''}}" class="limit-img-icon" src="{{item.icon_url}}"></image>
+        </view>
+      </view>
+      <view class="flex-box third-line">
+        <view class="other-list-img" wx:for="{{others}}" wx:key="index" data-item="{{item}}" data-index="2" wx:if="{{index>5}}" bindtap="gotoDetails">
+          <image src="{{item.cover}}" mode="aspectFill"></image>
+          <image wx:if="{{item.icon_url !== ''}}" class="limit-img-icon" src="{{item.icon_url}}"></image>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="img-list-container">
+    <view class="list-head flex-box" data-tid="{{dramaObj.id}}" data-index="3" bindtap='gotoMorePaper'>
+      <view class="flex-box align-center">
+        <view class="red-line"></view>
+        <view class="head-title">{{dramaObj.name}}</view>
+      </view>
+      <view class="flex-box align-center">
+        <view class="more-text">查看更多</view>
+        <image src="../../images/inmore_icon.png" class="more-icon"></image>
+      </view>
+    </view>
+    <view class="flex-box list-group">
+      <view class="list-item" wx:for="{{drama}}" wx:key="index" data-item="{{item}}" data-index="3" bindtap="gotoDetails">
+        <image src="{{item.cover}}" lazy-load="{{true}}" class="list-img" mode="aspectFill"></image>
+        <view class="img-text">{{item.movies_name}}</view>
+        <image wx:if="{{item.icon_url !== ''}}" class="limit-img-icon" src="{{item.icon_url}}"></image>
+      </view>
+    </view>
+  </view>
+
+</view>
+
+<image src="../../images/comment_icon.png" class="fixed-button" bindtap="gotoSuggest"></image>

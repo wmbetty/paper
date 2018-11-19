@@ -1,106 +1,97 @@
+// pages/details/details.js
 const backApi = require('../../utils/util');
 const Api = require('../../utils/wxApi');
+const app = getApp();
+const statusBarHeight = app.globalData.height;
 
 Page({
   data: {
-    winHeight: 0,
-    imgUrls: [
-      'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
-      'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
-      'http://pic.58pic.com/58pic/13/66/58/20258PICpDh_1024.png'
-    ],
-    imgList: [],
-    isX: false,
-    movId: '',
+    aid: '',
+    nvabarData: {
+      showCapsule: 1, //是否显示左上角图标
+      showTitle: false,
+      showHome: true
+    },
+    statusBarHeight: 0,
     token: '',
-    movies_name: '',
-    wallpaper_count: ''
+    imgList: [],
+    tidx: ''
   },
   onLoad: function (options) {
     let that = this;
-    let id = options.id;
-    //  高度自适应
-    wx.getSystemInfo({
-      success: function( res ) {
-        let clientHeight=res.windowHeight;
-        that.setData( {
-          winHeight: clientHeight
-        });
-        let model = res.model;
-        if (model.indexOf('iPhone') == -1) {
-          that.setData({isAndrod: true})
-        }
-        if (model==='iPhone X') {
-          that.setData({isX: true})
-        }
-      }
-    });
-    wx.showLoading({
-      title: '加载中',
-      mask: true
-    });
-    backApi.getToken().then(function (res) {
-      if (res.data.status * 1 === 200) {
-        let token = res.data.data.access_token;
-        that.setData({token: token});
-        let moiveViewApi = backApi.moiveViewApi+token;
-        Api.wxRequest(moiveViewApi,'GET',{movies_id: id},(res)=>{
+    console.log(options)
+    that.setData({aid: options.aid, statusBarHeight: statusBarHeight});
+    if (options.tidx !== '') {
+      that.setData({tidx: options.tidx})
+    }
+    app.globalData.aid = options.aid;
+    let loginApi = backApi.loginApi;
+    wx.login({
+      success: function(res) {
+        let code = res.code;
+        Api.wxRequest(loginApi, 'POST', {code: code}, (res)=>{
           if (res.data.status*1===200) {
-            wx.hideLoading();
-            that.setData({movies_name: res.data.data.movies_name,wallpaper_count: res.data.data.wallpaper_count});
-            if (res.data.data.wallpaper.length===0) {
-              Api.wxShowToast('暂无数据~', 'none', 2000);
-            } else {
-              that.setData({imgList: res.data.data.wallpaper})
+            let token = res.data.data.access_token;
+            that.setData({token: token})
+            let moviesViewApi = backApi.moviesViewApi+token;
+            wx.showLoading({
+              title: '加载中'
+            });
+            Api.wxRequest(moviesViewApi,'GET',{movies_id: options.aid},(res)=>{
+              if (res.data.status*1===200) {
+                wx.hideLoading();
+                let title = res.data.data.movies_name;
+                that.setData({title: title})
+                if (res.data.data.wallpaper.length===0) {
+                  Api.wxShowToast('暂无数据~', 'none', 2000);
+                } else {
+                  that.setData({imgList: res.data.data.wallpaper})
+                }
+              } else {
+                wx.hideLoading();
+                Api.wxShowToast('列表数据获取失败~', 'none', 2000);
+              }
+            })
+            let exitApi = backApi.exitApi + token;
+            let postData = {
+              type: 'movies',
+              param: options.aid,
+              mode: 'enter'
             }
+            Api.wxRequest(exitApi, 'POST', postData, (res)=>{
+              if (res.data.status*1===200) {
+                console.log(res, 'exit')
+              } else {
+                console.log(res, '出错了')
+              }
+            })
           } else {
-            wx.hideLoading();
-            Api.wxShowToast('列表数据获取失败~', 'none', 2000);
+            Api.wxShowToast('token获取失败~', 'none', 2000);
           }
         })
-      } else {
-        Api.wxShowToast('获取token失败~', 'none', 2000);
       }
     })
   },
   onReady: function () {},
-  onShow: function () {},
+  onShow: function () {
+    // wx.setStorageSync('page', 'details');
+    app.globalData.page = 'details';
+  },
+  onHide: function () {},
+  onUnload: function () {},
   onPullDownRefresh: function () {},
   onReachBottom: function () {},
-  onShareAppMessage: function () {
-    let that = this;
-    let movId = that.data.movId;
-    return {
-      title: '',
-      path: `/pages/index/index?movId=${movId}`,
-      success() {
-        Api.wxShowToast('分享成功~', 'none', 2000);
-      },
-      fail() {},
-      complete() {}
-    }
-  },
+  // onShareAppMessage: function () {}
   previewImg (e) {
-    let that = this;
-    let img = e.currentTarget.dataset.img;
-    let imgList = that.data.imgList;
-    let prevList = [];
-    for (let item of imgList) {
-      prevList = prevList.concat(item.original_url);
-    }
-    wx.previewImage({
-      current: img, // 当前显示图片的http链接
-      urls: prevList
-    })
-  },
-  goBack () {
-    wx.navigateBack({
-      delta: 1
-    })
-  },
-  goHome () {
-    wx.redirectTo({
-      url: '/pages/index/index'
+    let length = this.data.imgList.length;
+    let index = e.currentTarget.dataset.index;
+    let title = this.data.title;
+    let aid = this.data.aid;
+    app.aldstat.sendEvent(`详情页点击预览-${title}-第${index*1+1}张-`,{
+      play : ""
+    });
+    wx.navigateTo({
+      url: `/pages/previewimg/previewimg?index=${index}&title=${title}&aid=${aid}&length=${length}`
     })
   }
 })

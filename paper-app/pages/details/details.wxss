@@ -1,42 +1,21 @@
 /* pages/details/details.wxss */
-page{position: relative;background: #F5F6F8}
-.header{
-    width: 100%;height: 64rpx;background: #fff;
-    position: fixed;left: 0;top: -10rpx;padding-top: 74rpx;
+page{position: relative}
+.img-group{
+  padding: 20rpx 30rpx 0;background: #fff;
+  display: flex;justify-content: space-between;flex-flow: row wrap;
 }
-.phX-header{top:34rpx;}
-.header-icons{
-    width: 160rpx;height: 100%;
-    display: flex;align-items: center;margin-left: 72rpx;padding-left: 24rpx;border-radius: 30rpx;
-}
-.back-icon{width: 38rpx;height: 38rpx;margin-right: 56rpx;}
-.home-icon{width: 38rpx;height: 38rpx;}
-.d-content{
-    margin-top: 130rpx;
-}
-.phX-d-content{margin-top: 180rpx;}
-.img-container{
-    width: 606rpx;height: 1076rpx;margin: 0 auto;background: #E5E7ED;
-}
+
 .img-item{
-    /*width: 100%;*/
-    display: block;margin: 0 auto;max-height: 1076rpx;overflow: hidden;
+  width: 336rpx;height: 496rpx;margin-bottom: 20rpx;
+  background: rgba(166, 204, 182, 0.48);border-radius: 10rpx;
 }
-.cont-botom{
-    position: absolute;bottom: 0;left: 0;width: 100%;height: 42rpx;background: #fff;padding: 30rpx 0 60rpx;z-index: 99;
+.img-item:nth-child(2n){background: rgba(217, 211, 200, 0.48)}
+.img-item:nth-child(3n){background: rgba(191, 209, 204, 0.48)}
+.img-item:nth-child(4n){background: rgba(161, 203, 222, 0.48)}
+.cont-head{
+  position: fixed;width: 100%;padding: 20rpx 30rpx;font-size: 30rpx;color: #888;border-bottom: 1rpx solid #E5E7ED;background: #fff;
+  overflow: hidden;white-space:nowrap;text-overflow:ellipsis;word-break: break-all;
 }
-.d-title{
-    padding-left: 40rpx;color: #EEB934;font-size: 30rpx;margin-bottom: 8rpx;
+.movie-img-item{
+  width: 336rpx;height: 336rpx;
 }
-.d-tag{display: inline-block;margin-right: 30rpx;color: #C7C7CC;font-size: 28rpx;}
-.tag-view{padding-left: 40rpx;}
-/**/
-.swiper-item{width: 100%;height: 100%;position: relative;display: flex;
-    align-items: center;
-}
-.img-infos{
-    display: flex;justify-content: space-between;
-    font-size: 30rpx;color: #EEB934;padding: 0 36rpx 38rpx;
-}
-.img-title{max-width: 580rpx;overflow: hidden;white-space:nowrap;text-overflow:ellipsis;word-break: break-all;}
-.img-num{color: #C7C7CC}

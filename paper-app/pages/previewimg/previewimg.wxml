@@ -1,0 +1,66 @@
+<!--pages/preimg/previewimg.wxml-->
+<!-- <nav-bar navbar-data='{{nvabarData}}' title="{{title}}"></nav-bar> -->
+
+<!--component/navbar/navbar.wxml-->
+<view class='nav-wrap' wx:if="{{statusBarHeight===25}}" style='height:{{statusBarHeight+12}}px'>
+  <!-- height: {{height*2 + 30}}px; -->
+    <!-- 导航栏 中间的标题 -->
+  <!-- <view class='nav-title' style='line-height: {{statusBarHeight>30?(statusBarHeight*2 + 42):height*2 + 44}}px;' wx:if="{{navbarData.showTitle}}">{{title}}</view> -->
+  <view class="btns-cont">
+      <!-- 导航栏  左上角的返回按钮 和home按钮 -->
+      <!-- 其中wx:if='{{navbarData.showCapsule}}' 是控制左上角按钮的显示隐藏，首页不显示 -->
+    <view class='nav-capsule' style='height: {{statusBarHeight+12}}px;'>
+      <view class="navbar-btns-box">
+        <image src='/images/back_icon.png' class='back-pre' bindtap='goback'></image>
+        <image src='/images/home_icon.png' bindtap='gohome' class='back-home'></image>
+        <view class="split-line"></view>
+      </view>
+    </view>
+  </view>
+</view>
+<view class='nav-wrap' wx:if="{{statusBarHeight!==25}}" style='height:{{statusBarHeight>30?(statusBarHeight*2):(statusBarHeight*2 + 26)}}px'>
+  <!-- height: {{height*2 + 30}}px; -->
+    <!-- 导航栏 中间的标题 -->
+  <!-- <view class='nav-title' style='line-height: {{statusBarHeight>30?(statusBarHeight*2 + 42):height*2 + 44}}px;' wx:if="{{navbarData.showTitle}}">{{title}}</view> -->
+  <view class="btns-cont">
+      <!-- 导航栏  左上角的返回按钮 和home按钮 -->
+      <!-- 其中wx:if='{{navbarData.showCapsule}}' 是控制左上角按钮的显示隐藏，首页不显示 -->
+    <view class='nav-capsule' style='height: {{statusBarHeight>30?(statusBarHeight*2 + 42):statusBarHeight*2 + 44}}px;'>
+      <view class="navbar-btns-box">
+        <image src='/images/back_icon.png' class='back-pre' bindtap='goback'></image>
+        <image src='/images/home_icon.png' bindtap='gohome' class='back-home'></image>
+        <view class="split-line"></view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<swiper class="d-content" current="{{index}}" style="height:{{winHeight}}px;z-index:99" bindchange="change">
+  <block class="sw-block" wx:for="{{item}}" wx:key="index">
+      <swiper-item class="swiper-item">
+          <view class="img-outer-conts">
+            <!-- catchtap="previewImg" -->
+            <image style="will-change: transform;" lazy-load="{{true}}" src="{{item.original_url}}" mode="widthFix" class="img-item" data-preview="{{item.original_url}}" />
+          </view>
+      </swiper-item>
+  </block>
+</swiper>
+
+<view class="cont-botom">
+  <view class="title-cont">
+    <view class="paper-title">{{title}}</view>
+    <view>({{index*1+1}} / {{length}})</view>
+  </view>
+  <view class="operate-btn-cont">
+    <button class="operate-btn" open-type="share">
+      <image src="../../images/share_icon.png"></image>
+    </button>
+    <image class="operate-btn" src="../../images/download_icon.png" catchtap="downloadImg"></image>
+  </view>
+</view>
+<view class="view-img-box" hidden="{{!showPreview}}" bindtap="hidePreview">
+  <image src="{{curr_img}}" mode="widthFix"></image>
+</view>
+<image class="down-tip" src="../../images/down_tip.png" wx:if="{{showDownload}}"></image>
+
+<dialog-wxml dialog-show="{{showDialog}}" open-type="{{openType}}" auth-info="{{authInfo}}" bind:cancelDialog="cancelDialog" bind:confirmDialog="confirmDialog"></dialog-wxml>

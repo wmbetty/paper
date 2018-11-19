@@ -1,5 +1,7 @@
 const backApi = require('../../utils/util');
 const Api = require('../../utils/wxApi');
+const app = getApp();
+const statusBarHeight = app.globalData.height;
 
 Page({
   data: {
@@ -14,10 +16,17 @@ Page({
     showSelect: false,
     titleText: '壁纸',
     token: '',
-    type: 1
+    type: 1,
+    nvabarData: {
+      showCapsule: 1, //是否显示左上角图标
+      title: '', //导航栏 中间的标题
+      showHome: true
+    },
+    statusBarHeight: 0
   },
   onLoad: function (options) {
     let that = this;
+    that.setData({statusBarHeight: statusBarHeight})
     //  高度自适应
     wx.getSystemInfo( {
       success: function( res ) {
@@ -25,43 +34,56 @@ Page({
         that.setData( {
           winHeight: clientHeight
         });
-        if (res.model==='iPhone X') {
+        if (res.model.indexOf('iPhone X') != -1) {
           that.setData({isX: true})
         }
       }
     });
-    backApi.getToken().then(function (res) {
-      if (res.data.status*1===200) {
-        let token = res.data.data.access_token;
-        let tagListApi = backApi.tagListApi+token;
-        that.setData({token: token});
-        Api.wxRequest(tagListApi,'GET',{},(res)=>{
+
+    let loginApi = backApi.loginApi;
+    wx.login({
+      success: function(res) {
+        let code = res.code;
+        Api.wxRequest(loginApi, 'POST', {code: code}, (res)=>{
           if (res.data.status*1===200) {
-            if (res.data.data.length===0) {
-              Api.wxShowToast('暂无标签数据~', 'none', 2000);
-            } else {
-              that.setData({tagList: res.data.data})
-            }
+            let token = res.data.data.access_token;
+            that.setData({token: token})
+            let tagListApi = backApi.tagListApi+token;
+            that.setData({token: token});
+            Api.wxRequest(tagListApi,'GET',{},(res)=>{
+              if (res.data.status*1===200) {
+                if (res.data.data.length===0) {
+                  Api.wxShowToast('暂无标签数据~', 'none', 2000);
+                } else {
+                  that.setData({tagList: res.data.data})
+                }
+              } else {
+                Api.wxShowToast('列表数据获取失败~', 'none', 2000);
+              }
+            })
           } else {
-            Api.wxShowToast('列表数据获取失败~', 'none', 2000);
+            Api.wxShowToast('token获取失败~', 'none', 2000);
           }
         })
-      } else {
-        Api.wxShowToast('token获取失败~', 'none', 2000);
       }
     })
   },
   onReady: function () {},
-  onShow: function () {},
+  onShow: function () {
+    app.globalData.page = 'search'
+  },
   onPullDownRefresh: function () {},
   onReachBottom: function () {
     let that = this;
-    let type = that.data.type;
     let page = that.data.page*1+1;
     let searchText = that.data.searchText;
-    let listApi = backApi.moviesListApi+that.data.token;
+    let listApi = backApi.searchApi+that.data.token;
     let imgList = that.data.imgList;
-    Api.wxRequest(listApi,'GET',{keywords: searchText, page: page,type: type},(res)=>{
+
+    app.aldstat.sendEvent(`搜索页上滑看更多:关键词-${searchText}`,{
+      play : ""
+    });
+    Api.wxRequest(listApi,'GET',{keywords: searchText, page: page},(res)=>{
       if (res.data.status*1===200) {
         if (res.data.data.length>0) {
           imgList = imgList.concat(res.data.data);
@@ -74,17 +96,20 @@ Page({
       }
     })
   },
-  onShareAppMessage: function () {
-    return {
-      title: '',
-      path: `/pages/index/index`,
-      success() {
-        Api.wxShowToast('分享成功~', 'none', 2000);
-      },
-      fail() {},
-      complete() {}
-    }
-  },
+  // onShareAppMessage: function () {
+  //   app.aldstat.sendEvent(`搜索页上滑看更多:关键词-${searchText}`,{
+  //     play : ""
+  //   });
+  //   return {
+  //     title: '',
+  //     path: `/pages/index/index`,
+  //     success() {
+  //       Api.wxShowToast('分享成功~', 'none', 2000);
+  //     },
+  //     fail() {},
+  //     complete() {}
+  //   }
+  // },
   showSelectList () {
     let that = this;
     let showSelect = that.data.showSelect;
@@ -93,40 +118,6 @@ Page({
     } else {
       that.setData({showSelect: true})
     }
-  },
-  choseType (e) {
-    let that = this;
-    let type = e.currentTarget.dataset.type*1;
-    let searchText = that.data.searchText;
-    let listApi = backApi.moviesListApi+that.data.token;
-    if (type===1) {
-      that.setData({titleText: '壁纸', type: 1, page: 1})
-    } else {
-      that.setData({titleText: '剧照', type: 2, page: 1})
-    }
-    setTimeout(()=>{
-      let type = that.data.type;
-      if (searchText!=='') {
-        wx.showLoading({
-          title: '加载中',
-          mask: true
-        });
-        Api.wxRequest(listApi,'GET',{keywords: searchText, page: 1,type: type},(res)=>{
-          if (res.data.status*1===200) {
-            wx.hideLoading();
-            if (res.data.data.length>0) {
-              that.setData({imgList: res.data.data,page: 1,keywords: searchText,showTags: false})
-            } else {
-              Api.wxShowToast('暂未搜到结果~', 'none', 2000);
-              that.setData({imgList: [],page: 1})
-            }
-          } else {
-            wx.hideLoading();
-            Api.wxShowToast('搜索失败~', 'none', 2000);
-          }
-        })
-      }
-    },220)
   },
   inputPut (e) {
     let that = this;
@@ -155,14 +146,16 @@ Page({
   inputBlur () {
     let that = this;
     let text = that.data.searchText;
-    let type = that.data.type*1;
-    let listApi = backApi.moviesListApi+that.data.token;
+    let listApi = backApi.searchApi+that.data.token;
     if (text!=='') {
+      app.aldstat.sendEvent(`搜索页输入关键词-${text}`,{
+        play : ""
+      });
       wx.showLoading({
         title: '加载中',
         mask: true
       });
-      Api.wxRequest(listApi,'GET',{keywords: text, page: 1,type: type},(res)=>{
+      Api.wxRequest(listApi,'GET',{keywords: text, page: 1},(res)=>{
         if (res.data.status*1===200) {
           wx.hideLoading();
           if (res.data.data.length>0) {
@@ -176,18 +169,33 @@ Page({
           Api.wxShowToast('搜索失败~', 'none', 2000);
         }
       })
+      let exitApi = backApi.exitApi + that.data.token;
+      let postData = {
+        type: 'search',
+        param: text,
+        mode: 'enter'
+      }
+      Api.wxRequest(exitApi, 'POST', postData, (res)=>{
+        if (res.data.status*1===200) {
+          console.log(res, 'exit')
+        } else {
+          console.log(res, '出错了')
+        }
+      })
     }
   },
   gosearch (e) {
     let that = this;
-    let listApi = backApi.moviesListApi+that.data.token;
+    let listApi = backApi.searchApi+that.data.token;
     let word = e.currentTarget.dataset.word;
+    app.aldstat.sendEvent(`搜索页点击热门关键词-${word}`,{
+      play : ""
+    });
     setTimeout(()=>{
-      let type = that.data.type;
       that.setData({
         page: 1,keywords: word,searchText: word
       });
-      Api.wxRequest(listApi,'GET',{page: 1,keywords:word,type: type},(res)=>{
+      Api.wxRequest(listApi,'GET',{page: 1,keywords:word},(res)=>{
         if (res.data.status*1===200) {
           if (res.data.data.length>0) {
             that.setData({imgList: res.data.data, showTags: false})
@@ -199,6 +207,19 @@ Page({
         }
       })
     },200)
+    let exitApi = backApi.exitApi + that.data.token;
+    let postData = {
+      type: 'search',
+      param: word,
+      mode: 'enter'
+    }
+    Api.wxRequest(exitApi, 'POST', postData, (res)=>{
+      if (res.data.status*1===200) {
+        console.log(res, 'exit')
+      } else {
+        console.log(res, '出错了')
+      }
+    })
   },
   inputFocus () {
     let that = this;
@@ -210,7 +231,6 @@ Page({
   gotoDetail (e) {
     let id = e.currentTarget.dataset.id;
     wx.navigateTo({
-      // url: `/pages/details/details?id=${id}`
       url: `/pages/detail/detail?id=${id}`
     })
   },
@@ -222,6 +242,15 @@ Page({
   goHome () {
     wx.redirectTo({
       url: '/pages/index/index'
+    })
+  },
+  gotoDetails (e) {
+    let item = e.currentTarget.dataset.item;
+    app.aldstat.sendEvent(`搜索点击详情-${item.movies_name}-`,{
+      play : ""
+    });
+    wx.navigateTo({
+      url: `/pages/details/details?aid=${item.movies_id}`
     })
   }
 })

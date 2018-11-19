@@ -1,0 +1,40 @@
+<view style="height:{{winHeight}}px;position:relative;overflow-y:auto;">
+  <!--pages/suggest/suggest.wxml-->
+  <nav-bar navbar-data='{{nvabarData}}' title="客服中心"></nav-bar>
+  <view class="cont-head" wx:if="{{types.length>0}}" style="top: {{statusBarHeight>30?(statusBarHeight*2 - 2):(statusBarHeight*2 + 26)}}px;">
+    <view class="head-container">
+      <view class="{{tabIndex===index?'head-item head-item-active':'head-item'}}" wx:for="{{types}}" wx:key="index" data-tid="{{item.id}}" data-index="{{index}}" bindtap="changeTab">{{item.type_name}}</view>
+    </view>
+    <view wx:if="{{tabIndex===0}}" class="lt-red-line"></view>
+    <view wx:if="{{tabIndex===1}}" class="rt-red-line"></view>
+  </view>
+  <view class="banner-container" style="margin-top:{{statusBarHeight>30?(statusBarHeight*2+40):(statusBarHeight*2 + 68)}}px;">
+    <image wx:if="{{tabIndex===0}}"  src="../../images/resource_banner.png" class="banner-img"></image>
+    <image wx:if="{{tabIndex===1}}"  src="../../images/suggest_banner.png" class="banner-img"></image>
+  </view>
+  <view class="list-group" wx:if="{{commentList.length>0}}">
+    <view class="list-items" wx:for="{{commentList}}" wx:key="index">
+      <view class="user-infos">
+        <image class="user-avatar" src="{{item.member.avatar || '../../images/avatarDefault.png'}}"></image>
+        <view class="uname">{{item.member.nickname || '无名氏'}}</view>
+      </view>
+      <view class="m-contents">
+        <view class="user-content">{{item.content}}</view>
+        <view class="botom-infos">
+          <view>{{item.created_time}}</view>
+          <view class="prise-cont">
+            <view wx:if="{{item.total_praise}}">{{item.total_praise}}</view>
+            <image wx:if="{{item.is_praise*1===0}}" class="good-icon" src="{{item.isGood?'../../images/good2.png':'../../images/good1.png'}}" data-good="{{item.isGood}}" data-index="{{index}}" bindtap="gotoPraise"></image>
+            <image wx:if="{{item.is_praise*1===1}}" class="good-icon" src="../../images/good2.png"></image>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="comment-view">
+    <view class="text-cont" wx:if="{{!showInput}}" bindtap="showPut">说说看</view>
+    <input class="comment-text" placeholder-style="color:#888888;" hidden="{{!showInput}}" type="text" maxlength="80" focus="{{showInput}}" bindinput="getContent" value="{{content}}" bindblur="inputBlur"  />
+    <view class="send-btn" bindtap="sendComment">发送</view>
+  </view>
+  <dialog-wxml dialog-show="{{showDialog}}" auth-info="需要微信授权才能留言哦" bind:cancelDialog="cancelDialog" bind:confirmDialog="confirmDialog"></dialog-wxml>
+</view>

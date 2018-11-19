@@ -41,7 +41,7 @@ page{position: relative;background: #F5F6F8}
 .img-title{max-width: 580rpx;overflow: hidden;white-space:nowrap;text-overflow:ellipsis;word-break: break-all;}
 .img-num{color: #C7C7CC}
 
-.img-out-container{margin-top: 180rpx;}
+/* .img-out-container{margin-top: 180rpx;} */
 .list-img-box{width: 23%;display: inline-block;margin-left: 12rpx;}
 .isAndr-list{margin-left: 13rpx;}
 /*.list-img-box:nth-child(4n){margin-right: 10rpx;}*/

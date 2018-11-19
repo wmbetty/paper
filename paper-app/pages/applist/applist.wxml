@@ -1,0 +1,22 @@
+<!--pages/applist/applist.wxml-->
+<nav-bar navbar-data='{{nvabarData}}'></nav-bar>
+<view>
+    <view class="cont-title" style="margin-top: {{statusBarHeight>30?(statusBarHeight*2 - 2):(statusBarHeight*2 + 26)}}px;">精品推荐</view>
+    <view class="r-list-group">
+      <view class="r-list-item" wx:for="{{list}}" wx:key="index" data-item="{{item}}" bindtap="openApp">
+        <view class="list-lt-side">
+          <image src="{{item.logo}}" class="app-logo"></image>
+          <view>
+            <view class="r-list-infos">
+              <view class="app-name">{{item.name}}</view>
+              <view class="app-nums">{{item.people}}</view>
+              <image src="../../images/hot_icon2.png" class="hot-icon"></image>
+            </view>
+            <view class="app-infos">{{item.describe}}</view>
+          </view>
+        </view>
+        <view class="open-btn">开始</view>
+        <!-- <navigator class="open-btn" target="miniProgram" open-type="navigate" app-id="" path="" extra-data="">开始</navigator> -->
+      </view>
+    </view>
+  </view>

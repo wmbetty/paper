@@ -1,48 +1,51 @@
 <!--pages/search/search.wxml-->
 <view>
-    <view class="phone-top"></view>
+    <!-- <view class="phone-top"></view>
     <view class="{{isX?'header phX-header':'header'}}">
         <view class="header-icons">
             <image src="../../images/back_icon.png" class="back-icon" bindtap="goBack"></image>
             <image src="../../images/home_icon.png" class="home-icon" bindtap="goHome"></image>
         </view>
-    </view>
-    <view class="{{isX?'search-bar phX-search-bar':'search-bar'}}">
-        <view class="search-container">
-            <!--select-list-->
-            <view class="{{showSelect?'paper-cate-container select-list':'paper-cate-container'}}" catchtap="showSelectList">
-                <view class="cate-title">{{titleText}}</view>
-                <view class="down-arrow"></view>
-                <view wx:if="{{showSelect}}">
-                    <view class="title-item" data-type="1" bindtap="choseType">壁纸</view>
-                    <view class="break-line"></view>
-                    <view class="title-item" data-type="2" bindtap="choseType">剧照</view>
-                </view>
-            </view>
-            <view class="search-input-container">
-                <image class="search-icon" src="../../images/search_icon.png"></image>
-                <input type="text" value="{{searchText}}" class="search-input" placeholder="搜索关键词" placeholder-style="color:#666666;" focus="{{focus}}" bindinput="inputPut" bindblur="inputBlur" bindfocus="inputFocus" />
+    </view> -->
+    <!-- <nav-bar navbar-data='{{nvabarData}}'></nav-bar>
+    <view class="search-bar" style="top: {{statusBarHeight>30?(statusBarHeight*2):(statusBarHeight*2 + 26)}}px;padding-top:10px;">
+      <view class="search-input-container">
+          <image class="search-icon" src="../../images/search_icon.png"></image>
+          <input type="text" value="{{searchText}}" class="search-input" placeholder="搜索关键词" placeholder-style="color:#ffffff;" focus="{{focus}}" bindinput="inputPut" bindblur="inputBlur" bindfocus="inputFocus" />
+          <image class="close-icon" src="../../images/close_icon.png" hidden="{{!isSearchText}}" bindtap="clearText"></image>
+      </view>
+    </view> -->
+    <view class='nav-wrap' style='height:{{statusBarHeight>30?(statusBarHeight*2):(statusBarHeight*2 + 26)}}px'>
+      <view class="btns-cont">
+        <!-- <view class='nav-capsule' style='height: {{height>30?(height*2 + 30):height*2 + 44}}px;'>
+          <view class="navbar-btns-box no-home-btn" wx:if="{{!navbarData.showHome}}">
+            <image src='/images/back_icon.png' class='back-pre' bindtap='goback'></image>
+          </view>
+        </view> -->
+        <view class='nav-capsule' style='height: {{statusBarHeight>30?(statusBarHeight*2 + 42):statusBarHeight*2 + 44}}px;'>
+          <view class="idx-search-container">
+            <image src="/images/back_icon.png" class="s-back-icon" bindtap='goBack'></image>
+            <view class="search-view" bindtap="goSearch">
+                <image src="/images/search_icon.png" class="search-icon"></image>
+                <input type="text" value="{{searchText}}" class="new-search-input" placeholder-style="color:#ffffff;" placeholder="搜索关键词" focus="{{focus}}" bindinput="inputPut" bindblur="inputBlur" bindfocus="inputFocus" />
                 <image class="close-icon" src="../../images/close_icon.png" hidden="{{!isSearchText}}" bindtap="clearText"></image>
             </view>
+            <view class="s-split-line"></view>
+          </view>
         </view>
+      </view>
     </view>
-    <view class="{{isX?'s-main-cont phX-s-main-cont':'s-main-cont'}}">
-        <view class="tags-container" wx:if="{{showTags}}">
-            <view class="search-tag" wx:for="{{tagList}}" wx:key="index" data-word="{{item.keywords_name}}" bindtap="gosearch">{{item.keywords_name}}</view>
-        </view>
-        <view class="search-list-group" wx:if="{{imgList.length>0}}">
-            <view class="list-item" wx:for="{{imgList}}" wx:key="index" data-id="{{item.movies_id}}" bindtap="gotoDetail">
-                <view class="img-container">
-                    <image src="{{item.cover}}"></image>
-                </view>
-                <view class="img-infos-cont">
-                    <view class="img-name">{{item.movies_name}}</view>
-                    <view class="img-infos">
-                        <view>{{item.created_time}}</view>
-                        <view class="img-num">{{item.wallpaper_count || 0}}张</view>
-                    </view>
-                </view>
-            </view>
-        </view>
+    <view class="cont-head" style="top: {{statusBarHeight>30?(statusBarHeight*2 - 2):(statusBarHeight*2 + 26)}}px;">
+      <view wx:if="{{showTags}}">热门搜索</view>
+      <view wx:if="{{!showTags}}">关键词：{{searchText}}</view>
+    </view>
+    <view class="tags-container" wx:if="{{showTags}}" style="margin-top:{{statusBarHeight>30?(statusBarHeight*2 + 42):(statusBarHeight*2 + 70)}}px;">
+        <view class="search-tag" wx:for="{{tagList}}" wx:key="index" data-word="{{item.keywords_name}}" bindtap="gosearch">{{item.keywords_name}}</view>
+    </view>
+    <view class="new-img-group" wx:if="{{!showTags}}" style="margin-top:{{statusBarHeight>30?(statusBarHeight*2 + 40):(statusBarHeight*2 + 68)}}px;">
+      <view class="new-img-box" wx:for="{{imgList}}" wx:key="index" data-item="{{item}}" bindtap="gotoDetails">
+        <image src="{{item.cover}}" class="new-img-item" mode="aspectFill"></image>
+        <view class="img-title">{{item.movies_name}}</view>
+      </view>
     </view>
 </view>

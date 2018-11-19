@@ -11,9 +11,9 @@
 		"newFeature": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.2.4",
+	"libVersion": "2.4.0",
 	"appid": "wxd7cdf9ab7e0d5167",
-	"projectname": "paper",
+	"projectname": "paper1.1.22",
 	"isGameTourist": false,
 	"condition": {
 		"search": {
@@ -33,12 +33,12 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 3,
+			"current": 6,
 			"list": [
 				{
 					"id": -1,
-					"name": "detail",
-					"pathName": "pages/details/details",
+					"name": "ss",
+					"pathName": "pages/search/search",
 					"query": ""
 				},
 				{
@@ -49,14 +49,32 @@
 				},
 				{
 					"id": -1,
-					"name": "search",
-					"pathName": "pages/search/search",
+					"name": "test",
+					"pathName": "pages/test/test",
 					"query": ""
 				},
 				{
 					"id": -1,
-					"name": "dd",
-					"pathName": "pages/detail/detail"
+					"name": "test",
+					"pathName": "pages/test/test",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "apps",
+					"pathName": "pages/applist/applist",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "suggest",
+					"pathName": "pages/suggest/suggest",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "activity",
+					"pathName": "pages/activity/activity"
 				}
 			]
 		}

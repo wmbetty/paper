@@ -1,0 +1,40 @@
+<!--component/navbar/navbar.wxml-->
+<view class='nav-wrap' style='height:{{height>30?(height*2):(height*2 + 26)}}px'>
+  <!-- height: {{height*2 + 30}}px; -->
+    <!-- 导航栏 中间的标题 -->
+  <view class='nav-title' style='line-height: {{height>30?(height*2 + 42):height*2 + 44}}px;' wx:if="{{navbarData.showTitle}}">{{title}}</view>
+  <view class="btns-cont">
+      <!-- 导航栏  左上角的返回按钮 和home按钮 -->
+      <!-- 其中wx:if='{{navbarData.showCapsule}}' 是控制左上角按钮的显示隐藏，首页不显示 -->
+    <view class='nav-capsule' style='height: {{height>30?(height*2 + 42):height*2 + 44}}px;' wx:if='{{navbarData.showCapsule}}'>
+       <!-- 左上角的返回按钮，wx:if='{{!share}}'空制返回按钮显示 -->
+       <!-- 从分享进入小程序时 返回上一级按钮不应该存在 -->
+      <view class="navbar-btns-box" wx:if="{{navbarData.showHome}}">
+        <image src='/images/back_icon.png' class='back-pre' bindtap='goback'></image>
+        <image src='/images/home_icon.png' bindtap='gohome' class='back-home'></image>
+        <view class="split-line"></view>
+      </view>
+      <view class="navbar-btns-box no-home-btn" wx:if="{{!navbarData.showHome}}">
+        <image src='/images/back_icon.png' class='back-pre' bindtap='goback'></image>
+      </view>
+    </view>
+    <view class='nav-capsule' style='height: {{height>30?(height*2 + 42):height*2 + 44}}px;' wx:if='{{!navbarData.showCapsule}}'>
+      <view class="idx-search-container">
+        <image src="/images/back_icon.png" class="s-back-icon" wx:if="{{navbarData.showSBack}}" bindtap='goback'></image>
+        <view class="search-view" bindtap="goSearch">
+            <image src="/images/search_icon.png" class="search-icon"></image>
+            <view>搜索关键词</view>
+        </view>
+        <view wx:if="{{navbarData.showSBack}}" class="s-split-line"></view>
+      </view>
+    </view>
+    <!-- <view class='nav-capsule' style='height: {{height*2 + 44}}px;' wx:if='{{navbarData.showCapsule && share}}'>
+       <!-- 左上角的返回按钮，wx:if='{{!share}}'空制返回按钮显示 -->
+       <!-- 从分享进入小程序时 返回上一级按钮不应该存在 -->
+       <!-- <view class="navbar-btns-box"> -->
+         <!-- <image src='/images/back_icon.png' class='back-pre' bindtap='goback'></image> -->
+         <!-- <image src='/images/home_icon.png' bindtap='gohome' class='back-home'></image> -->
+       <!-- </view> -->
+    <!-- </view> -->
+  </view>
+</view>

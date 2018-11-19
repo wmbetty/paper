@@ -1,0 +1,8 @@
+<!--pages/activity/activity.wxml-->
+<nav-bar navbar-data='{{nvabarData}}'></nav-bar>
+<view class="img-box" style="min-height:{{statusBarHeight>30?winHeight-(statusBarHeight*2 + 12):winHeight-(statusBarHeight*2 + 40)}}px;margin-top: {{statusBarHeight>30?(statusBarHeight*2):(statusBarHeight*2 + 28)}}px;">
+  <image lazy-load="{{true}}" src="{{activity.img_url}}" mode="widthFix"></image>
+</view>
+<button class="fixed-button" open-type="share">
+  <image src="../../images/activityshare_icon.png"></image>
+</button>

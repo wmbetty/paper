@@ -1,15 +1,26 @@
 {
-  "pages":[
+  "pages": [
     "pages/index/index",
     "pages/details/details",
-    "pages/detail/detail",
-    "pages/search/search"
+    "pages/morelist/morelist",
+    "pages/search/search",
+    "pages/applist/applist",
+    "pages/previewimg/previewimg",
+    "pages/suggest/suggest",
+    "pages/activity/activity"
   ],
-  "window":{
-    "backgroundTextStyle":"light",
+  "window": {
+    "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "",
-    "navigationBarTextStyle":"black",
+    "navigationBarTextStyle": "#ffffff",
     "navigationStyle": "custom"
-  }
+  },
+  "navigateToMiniProgramAppIdList": [
+    "wxaf1894b4e7be116f",
+    "wxeb99ca8b734c96f2",
+    "wx9fec8c5f7b92b271",
+    "wxf5394a0f7e9a6b2d",
+    "wx47c048bcf92f605d"
+  ]
 }

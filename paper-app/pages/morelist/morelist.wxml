@@ -1,0 +1,25 @@
+<!--pages/morelist/morelist.wxml-->
+<!-- <view></view> -->
+<nav-bar navbar-data='{{nvabarData}}'></nav-bar>
+<view class="tab-head" style="top: {{statusBarHeight>30?(statusBarHeight*2 - 2):(statusBarHeight*2 + 26)}}px;" wx:if="{{types.length>0}}">
+  <view class="tab-items">
+    <view wx:for="{{types}}" wx:key="index" class="{{typeId===item.id*1?'tab-head-item tab-head-item-active':'tab-head-item'}}" data-tid="{{item.id}}" data-index="{{index}}" bindtap="changeTab">
+      <view>{{item.type_name}}</view>
+      <view class="red-line" wx:if="{{item.id*1===typeId && indexIn}}"></view>
+      <view class="red-line" wx:if="{{!indexIn && tabIndex === index}}"></view>
+    </view>
+  </view>
+  <view class="refresh-box" bindtap="goRefresh" wx:if="{{tabIndex*1===2 || tabIndex*1===3}}">
+    <view>换一换</view>
+    <image class="{{isrefresh?'refresh-icon refresh-icon-active':'refresh-icon'}}" src="../../images/refresh_icon.png"></image>
+  </view>
+</view>
+<view wx:if="{{lists.length>0}}" class="main-container" style="margin-top:{{statusBarHeight>30?(statusBarHeight*2 + 56):(statusBarHeight*2 + 84)}}px;">
+  <image wx:for="{{lists}}" wx:key="index" data-item="{{item}}" data-tidx="{{tabIndex}}" bindtap="gotoDetails" src="{{item.cover}}" class="img-item" mode="aspectFill"></image>
+</view>
+<!-- <view class="flex-box tab-head">
+  <view wx:for="{{types}}" wx:key="index" class="{{typeId===item.id*1?'tab-head-item tab-head-item-active':'tab-head-item'}}">{{item.type_name}}</view>
+</view>
+<view class="tab-content">
+  <image src="{{item.cover}}" class="img-item"  wx:for="{{lists}}" wx:key="index" data-aid="{{item.anime_id}}" bindtap="gotoDetails"></image>
+</view> -->
